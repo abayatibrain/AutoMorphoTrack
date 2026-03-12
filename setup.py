@@ -1,0 +1,46 @@
+from setuptools import setup, find_packages
+import os
+
+# Read README file (handle missing file gracefully for pip install from sdist)
+long_description = ""
+readme_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "README.md")
+if os.path.exists(readme_path):
+    with open(readme_path, "r", encoding="utf-8") as fh:
+        long_description = fh.read()
+
+setup(
+    name="automorphotrack",
+    version="2.1.0",
+    author="Armin Bayati, Ph.D.",
+    author_email="a.bayati.brain@gmail.com",
+    description="Automated pipeline for mitochondrial and lysosomal detection, tracking, morphology, and colocalization analysis in microscopy images.",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/abayatibrain/AutoMorphoTrack",
+    packages=find_packages(),
+    python_requires=">=3.9",
+    install_requires=[
+        "numpy>=1.23.0",
+        "pandas>=1.5.0",
+        "matplotlib>=3.6.0",
+        "seaborn>=0.12.0",
+        "opencv-python>=4.6.0",
+        "scikit-image>=0.19.0",
+        "scipy>=1.9.0",
+        "tifffile>=2022.8.12"
+    ],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Image Processing",
+    ],
+    include_package_data=True,
+    license="MIT",
+    project_urls={
+        "Documentation": "https://github.com/abayatibrain/AutoMorphoTrack",
+        "Source": "https://github.com/abayatibrain/AutoMorphoTrack",
+        "Tracker": "https://github.com/abayatibrain/AutoMorphoTrack/issues",
+    },
+)

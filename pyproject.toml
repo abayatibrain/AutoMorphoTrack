@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "automorphotrack"
+version = "2.1.0"
+description = "Automated pipeline for mitochondrial and lysosomal detection, tracking, morphology, and colocalization analysis in microscopy images."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Armin Bayati, Ph.D.", email = "a.bayati.brain@gmail.com"}
+]
+requires-python = ">=3.9"
+keywords = ["image-processing", "microscopy", "organelle-tracking", "mitochondria", "lysosomes"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = [
+    "numpy>=1.23.0",
+    "pandas>=1.5.0",
+    "matplotlib>=3.6.0",
+    "seaborn>=0.12.0",
+    "opencv-python>=4.6.0",
+    "scikit-image>=0.19.0",
+    "scipy>=1.9.0",
+    "tifffile>=2022.8.12"
+]
+
+[project.urls]
+Documentation = "https://github.com/abayatibrain/AutoMorphoTrack"
+Source = "https://github.com/abayatibrain/AutoMorphoTrack"
+Tracker = "https://github.com/abayatibrain/AutoMorphoTrack/issues"
