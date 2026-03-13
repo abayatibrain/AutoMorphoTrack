@@ -141,9 +141,13 @@ def compare_shape_distributions(combined_df, out_dir="Shape_Profiling_Outputs", 
         # Mann-Whitney U test
         u_stat, p_value = stats.mannwhitneyu(mito_data, lyso_data)
 
-        # Effect size (rank-biserial correlation)
+        # Effect size: rank-biserial correlation
         n1, n2 = len(mito_data), len(lyso_data)
         r = 1 - (2*u_stat) / (n1 * n2)
+
+        # Cohen's d effect size
+        pooled_std = np.sqrt(((n1-1)*mito_data.std()**2 + (n2-1)*lyso_data.std()**2) / (n1+n2-2))
+        cohens_d = (mito_data.mean() - lyso_data.mean()) / pooled_std if pooled_std > 0 else 0.0
 
         stats_list.append({
             'Metric': metric,
@@ -152,12 +156,23 @@ def compare_shape_distributions(combined_df, out_dir="Shape_Profiling_Outputs", 
             'Mito_Std': mito_data.std(),
             'Lyso_Std': lyso_data.std(),
             'U_Statistic': u_stat,
-            'P_Value': p_value,
-            'Significant': 'Yes' if p_value < alpha else 'No',
-            'Effect_Size': r
+            'P_Value_Raw': p_value,
+            'Rank_Biserial': r,
+            'Cohens_d': cohens_d
         })
 
     stats_df = pd.DataFrame(stats_list)
+
+    # Bonferroni correction for multiple comparisons
+    n_tests = len(stats_df)
+    if n_tests > 0:
+        stats_df['P_Value_Bonferroni'] = np.minimum(stats_df['P_Value_Raw'] * n_tests, 1.0)
+        stats_df['Significant'] = stats_df['P_Value_Bonferroni'].apply(
+            lambda p: 'Yes' if p < alpha else 'No')
+    else:
+        stats_df['P_Value_Bonferroni'] = []
+        stats_df['Significant'] = []
+
     stats_path = Path(out_dir) / "Shape_Statistics.csv"
     stats_df.to_csv(stats_path, index=False)
     print(f"Saved statistical comparison → {stats_path}")
