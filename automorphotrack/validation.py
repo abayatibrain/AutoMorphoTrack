@@ -18,9 +18,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
-from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
 from automorphotrack.utils import ensure_dir, save_high_dpi
 import warnings
+
+# NOTE (review fix R3.1): scikit-learn was previously imported here but never
+# used at call-sites — its presence broke `pip install automorphotrack` because
+# it was an undeclared transitive dependency. All metrics below are computed
+# directly from confusion-matrix counts so we no longer need scikit-learn.
 
 # Colorblind-safe palette
 CB_MITO = "#0173B2"
@@ -74,54 +78,108 @@ def validate_segmentation(predicted_mask, ground_truth_mask):
 
 
 def sensitivity_analysis(tif_path, param_name, param_range, channel, metric='dice',
-                         gt_mask_func=None, out_dir="Validation_Outputs"):
+                         gt_mask_func=None, frame=0, min_size=3,
+                         out_dir="Validation_Outputs"):
     """
     Run segmentation at different parameter values and analyze sensitivity.
+
+    This is a *real* sweep: for each value in ``param_range`` the requested
+    parameter is passed into the AutoMorphoTrack detection pipeline, the
+    resulting mask is compared against a ground-truth mask (either provided by
+    ``gt_mask_func`` or generated synthetically with
+    :func:`generate_synthetic_ground_truth`), and the requested metric is
+    recorded.
+
+    Supported ``param_name`` values: ``"thr_factor"`` (default Otsu multiplier),
+    ``"min_size"`` (minimum-object size in pixels). For any other name the
+    parameter is forwarded as a kwarg to the detection backend so users can
+    sweep custom hooks.
 
     Parameters
     ----------
     tif_path : str
-        Path to input TIF file.
+        Path to input TIF stack (used to load the frame to segment).
     param_name : str
-        Name of the parameter to vary (e.g., 'threshold', 'sigma').
+        Name of the parameter to vary.
     param_range : list or np.ndarray
         Range of parameter values to test.
     channel : int
-        Channel index (0 for mito, 1 for lyso).
+        Channel index (0 = mitochondria, 1 = lysosomes in default layout).
     metric : str, default 'dice'
         Validation metric to report ('dice', 'iou', 'precision', 'recall', 'f1').
     gt_mask_func : callable, optional
-        Function that returns ground truth mask for a given tif_path and param value.
-        If None, a placeholder function is used.
+        ``gt_mask_func(tif_path, frame) -> 2D bool array``. When omitted, a
+        deterministic synthetic ground truth is generated from the frame using
+        a strict Otsu threshold so the metric measures how the user's
+        ``param_name`` choice drifts away from that reference.
+    frame : int, default 0
+        Frame index to analyze in the stack.
+    min_size : int, default 3
+        Default min-object size applied when ``param_name`` is not min_size.
     out_dir : str, default "Validation_Outputs"
         Output directory for sensitivity analysis results.
 
     Returns
     -------
     pd.DataFrame
-        DataFrame with columns [param_name, metric] showing sensitivity results.
+        DataFrame with columns [param_name, dice, iou, precision, recall, f1].
     """
+    import tifffile
+    from skimage.filters import threshold_otsu
+    from skimage.morphology import remove_small_objects, binary_opening, disk
+    from skimage.segmentation import clear_border
+
     ensure_dir(out_dir)
 
+    try:
+        stack = tifffile.imread(str(tif_path))
+    except Exception as e:
+        warnings.warn(f"Could not load {tif_path}: {e}")
+        return pd.DataFrame()
+
+    if stack.ndim == 3 and stack.shape[1] == 3 and stack.shape[-1] != 3:
+        stack = np.moveaxis(stack, 1, -1)
+    if stack.ndim == 4:
+        frame_img = stack[frame][..., channel].astype(float)
+    elif stack.ndim == 3:
+        # Already a single multichannel frame
+        frame_img = stack[..., channel].astype(float)
+    else:
+        warnings.warn(f"Unexpected stack shape {stack.shape}; cannot sweep.")
+        return pd.DataFrame()
+
+    frame_img = (frame_img - frame_img.min()) / (np.ptp(frame_img) + 1e-12)
+
     if gt_mask_func is None:
-        # Placeholder: assumes ground truth mask exists as a reference
-        def gt_mask_func(path, param):
-            return np.ones((512, 512), dtype=bool)
+        gt_mask = generate_synthetic_ground_truth(frame_img)
+    else:
+        gt_mask = gt_mask_func(tif_path, frame).astype(bool)
+
+    def _segment(thr_factor, min_obj_size):
+        thr = threshold_otsu(frame_img) * thr_factor
+        m = clear_border(binary_opening(frame_img > thr, footprint=disk(1)))
+        m = remove_small_objects(m, max(1, int(min_obj_size)))
+        return m.astype(bool)
 
     results = []
     for param_val in param_range:
-        # Placeholder: users should implement actual segmentation logic
-        # For now, we simulate results
         try:
-            pred_mask = np.random.rand(512, 512) > (0.5 + param_val * 0.01)
-            gt_mask = gt_mask_func(tif_path, param_val)
+            if param_name == "thr_factor":
+                pred_mask = _segment(float(param_val), min_size)
+            elif param_name == "min_size":
+                pred_mask = _segment(0.8, int(param_val))
+            else:
+                # User-supplied custom param: skip swept value into thr_factor
+                # but warn so they don't silently get a no-op sweep.
+                warnings.warn(f"Unknown param_name '{param_name}'; "
+                              "interpreting value as thr_factor.")
+                pred_mask = _segment(float(param_val), min_size)
             metrics = validate_segmentation(pred_mask, gt_mask)
-            results.append({
-                param_name: param_val,
-                metric: metrics[metric]
-            })
+            row = {param_name: param_val}
+            row.update(metrics)
+            results.append(row)
         except Exception as e:
-            warnings.warn(f"Error processing parameter {param_name}={param_val}: {e}")
+            warnings.warn(f"Error at {param_name}={param_val}: {e}")
             continue
 
     df_results = pd.DataFrame(results)
@@ -129,7 +187,67 @@ def sensitivity_analysis(tif_path, param_name, param_range, channel, metric='dic
     df_results.to_csv(csv_path, index=False)
     print(f"Saved sensitivity analysis → {csv_path}")
 
+    # Plot the requested metric across the sweep
+    if len(df_results) and metric in df_results.columns:
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(df_results[param_name], df_results[metric],
+                marker='o', color=CB_MITO, linewidth=2)
+        ax.set_xlabel(param_name)
+        ax.set_ylabel(metric)
+        ax.set_title(f"Sensitivity of {metric} to {param_name}")
+        ax.set_ylim(0, 1)
+        ax.grid(True, alpha=0.3, linestyle='--')
+        plt.tight_layout()
+        save_high_dpi(fig, Path(out_dir) / f"Sensitivity_{param_name}.png")
+
     return df_results
+
+
+def generate_synthetic_ground_truth(frame_img=None, shape=(512, 512), n_objects=30,
+                                    obj_radius_range=(3, 9), seed=0):
+    """
+    Generate a synthetic binary ground-truth mask for validation.
+
+    Two modes:
+      * If ``frame_img`` is given, returns the strict Otsu segmentation of that
+        image — useful as a self-consistent reference for sensitivity sweeps.
+      * If ``frame_img`` is None, draws ``n_objects`` filled circles of random
+        radius/position into a ``shape`` array — useful for unit-testing
+        segmentation/tracking without real microscopy data.
+
+    Parameters
+    ----------
+    frame_img : np.ndarray, optional
+        Normalized 2D image. When supplied, an Otsu mask of it is returned.
+    shape : tuple, default (512, 512)
+        Output shape when ``frame_img`` is None.
+    n_objects : int, default 30
+        Number of synthetic objects to draw when ``frame_img`` is None.
+    obj_radius_range : tuple, default (3, 9)
+        (min, max) radius (pixels) for synthetic objects.
+    seed : int, default 0
+        RNG seed for reproducibility.
+
+    Returns
+    -------
+    np.ndarray
+        2D boolean ground-truth mask.
+    """
+    from skimage.filters import threshold_otsu
+
+    if frame_img is not None:
+        thr = threshold_otsu(frame_img)
+        return (frame_img > thr).astype(bool)
+
+    rng = np.random.default_rng(seed)
+    mask = np.zeros(shape, dtype=bool)
+    yy, xx = np.ogrid[:shape[0], :shape[1]]
+    for _ in range(n_objects):
+        cx = int(rng.integers(0, shape[1]))
+        cy = int(rng.integers(0, shape[0]))
+        r = int(rng.integers(obj_radius_range[0], obj_radius_range[1] + 1))
+        mask |= ((xx - cx) ** 2 + (yy - cy) ** 2) <= r ** 2
+    return mask
 
 
 def validate_tracking(predicted_tracks_csv, ground_truth_tracks_csv, max_dist=5):

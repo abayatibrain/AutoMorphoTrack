@@ -97,18 +97,41 @@ def analyze_colocalization(
         frames_out.append(upscale_frame(rgb))
 
     # ---------- Save metrics ----------
+    # Column naming reflects R2.5(iii): each metric explicitly documents whether
+    # it is computed on binary masks or on raw intensity, and the unit/scale.
     csv_path = Path(out_dir) / "Colocalization.csv"
     pd.DataFrame({
         "Frame": np.arange(n_frames),
-        "Percent_Overlap": overlap_percent,
-        "Manders_M1": m1_list,
-        "Manders_M2": m2_list,
-        "Pearson_r": pearson_r,
-        "Cosine_Similarity": overlap_R,  # Renamed from Overlap_R for clarity
-        "Mito_TotalIntensity": mito_sum,
-        "Lyso_TotalIntensity": lyso_sum
+        "Jaccard_overlap_mask": np.array(overlap_percent) / 100.0,   # binary masks, 0–1
+        "Jaccard_percent_mask": overlap_percent,                     # same, 0–100
+        "Manders_M1_intensity": m1_list,                             # raw intensity, 0–1
+        "Manders_M2_intensity": m2_list,                             # raw intensity, 0–1
+        "Pearson_r_intensity": pearson_r,                            # raw intensity, -1..1
+        "Cosine_similarity_intensity": overlap_R,                    # raw intensity, 0–1
+        "Mito_total_intensity": mito_sum,
+        "Lyso_total_intensity": lyso_sum,
     }).to_csv(csv_path, index=False)
+    # Companion definitions file so legends are unambiguous in publications.
+    defs_path = Path(out_dir) / "Colocalization_metric_definitions.csv"
+    pd.DataFrame([
+        {"Metric": "Jaccard_overlap_mask",
+         "Basis": "binary mask",
+         "Definition": "|A ∩ B| / |A ∪ B|, range 0–1, 1 = perfect overlap"},
+        {"Metric": "Manders_M1_intensity",
+         "Basis": "raw intensity",
+         "Definition": "Σ Mito intensity inside Lyso mask / Σ Mito intensity, 0–1"},
+        {"Metric": "Manders_M2_intensity",
+         "Basis": "raw intensity",
+         "Definition": "Σ Lyso intensity inside Mito mask / Σ Lyso intensity, 0–1"},
+        {"Metric": "Pearson_r_intensity",
+         "Basis": "raw intensity",
+         "Definition": "Pearson correlation of paired Mito/Lyso pixel intensities, -1..1"},
+        {"Metric": "Cosine_similarity_intensity",
+         "Basis": "raw intensity",
+         "Definition": "Σ(Mito·Lyso) / sqrt(Σ Mito² · Σ Lyso²), 0–1"},
+    ]).to_csv(defs_path, index=False)
     print(f"Saved metrics → {csv_path}")
+    print(f"Saved metric definitions → {defs_path}")
 
     # ---------- Save video ----------
     video_path = Path(out_dir) / "Colocalization_BrightBlueOverlay.mp4"
@@ -123,16 +146,17 @@ def analyze_colocalization(
     # ---------- Plot metrics ----------
     plot_path = Path(out_dir) / "Colocalization_MetricsPlot.png"
     fig, ax = plt.subplots(figsize=(10, 9))
-    ax.plot(m1_list, color=CB_MITO, linestyle='-', label='Manders M1 (mito\u2192lyso)')
-    ax.plot(m2_list, color=CB_LYSO, linestyle='-', label='Manders M2 (lyso\u2192mito)')
-    ax.plot(np.array(overlap_percent) / 100, 'b--', label='Jaccard overlap fraction')
-    ax.plot(pearson_r, 'k-.', label='Pearson r (intensity)')
-    ax.plot(overlap_R, color='#CC79A7', linestyle=':', label='Cosine similarity')
+    ax.plot(m1_list, color=CB_MITO, linestyle='-', label='Manders M1 \u2014 intensity (mito\u2192lyso mask)')
+    ax.plot(m2_list, color=CB_LYSO, linestyle='-', label='Manders M2 \u2014 intensity (lyso\u2192mito mask)')
+    ax.plot(np.array(overlap_percent) / 100, color='#009E73', linestyle='--',
+            label='Jaccard \u2014 binary masks')
+    ax.plot(pearson_r, color='#000000', linestyle='-.', label='Pearson r \u2014 raw intensity')
+    ax.plot(overlap_R, color='#CC79A7', linestyle=':', label='Cosine similarity \u2014 raw intensity')
     ax.set_xlabel("Frame")
     ax.set_ylabel("Coefficient / Fraction (0–1)")
     ax.set_ylim(0, 1)
-    ax.legend()
-    ax.set_title("Colocalization Metrics Over Time")
+    ax.legend(loc='best', fontsize=9, frameon=True)
+    ax.set_title("Colocalization Metrics Over Time\n(intensity- vs mask-based metrics distinguished)")
     plt.tight_layout()
     save_high_dpi(fig, plot_path)
 

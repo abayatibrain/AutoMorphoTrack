@@ -10,7 +10,7 @@ if os.path.exists(readme_path):
 
 setup(
     name="automorphotrack",
-    version="2.1.0",
+    version="2.2.0",
     author="Armin Bayati, Ph.D.",
     author_email="a.bayati.brain@gmail.com",
     description="Automated pipeline for mitochondrial and lysosomal detection, tracking, morphology, and colocalization analysis in microscopy images.",
@@ -27,14 +27,35 @@ setup(
         "opencv-python>=4.6.0",
         "scikit-image>=0.19.0",
         "scipy>=1.9.0",
-        "tifffile>=2022.8.12"
+        "tifffile>=2022.8.12",
     ],
+    extras_require={
+        "mcp": ["mcp>=1.0.0"],  # Optional MCP server for Claude Code integration
+        "dev": [
+            "pytest>=7.0",
+            "pytest-cov>=4.0",
+            "build>=1.0",
+            "twine>=4.0",
+        ],
+    },
+    entry_points={
+        "console_scripts": [
+            "automorphotrack=automorphotrack.cli:main",
+            "amt=automorphotrack.cli:main",
+        ],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering :: Image Processing",
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        "Topic :: Scientific/Engineering :: Visualization",
     ],
     include_package_data=True,
     license="MIT",

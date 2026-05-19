@@ -15,11 +15,27 @@ AutoMorphoTrack processes time-lapse `.tif` stacks (typically two-channel: mitoc
 ## Key Features
 
 - **Automated organelle detection** with morphological filtering
+- **Pluggable segmentation backends** — Otsu, Sauvola, Niblack, local-Otsu,
+  rolling-ball/top-hat — to handle uneven illumination, bleaching, and
+  variable SNR (v2.2.0)
 - **Integrated tracking** of mitochondria and lysosomes across time
 - **Shape profiling** with publication-ready violin plots
-- **Motility analysis** with velocity and displacement quantification
-- **Colocalization metrics** (Manders, Pearson coefficients)
-- **Comprehensive validation tools** for segmentation and tracking accuracy
+- **Motility analysis** with velocity and displacement quantification,
+  optional per-frame displacement floor to suppress jitter
+- **Colocalization metrics** — Manders M1/M2 (intensity), Jaccard (mask),
+  Pearson r (intensity), cosine similarity — with an accompanying
+  metric-definitions CSV so reviewers and readers never have to guess what a
+  column means
+- **Comprehensive validation tools**: Dice / IoU / precision / recall / F1
+  against expert annotations or synthetic ground truth, plus real parameter
+  sensitivity sweeps
+- **Benchmarking exporters** for CellProfiler, MiNA, and MitoGraph schemas
+  so AMT results can be compared side-by-side with those tools (v2.2.0)
+- **Command-line interface**: `automorphotrack run stack.tif --out ./results`
+  (v2.2.0)
+- **MCP connector for Claude Code / Claude Desktop**: drive the pipeline by
+  natural language without leaving your AI assistant (v2.2.0,
+  see [`docs/MCP.md`](docs/MCP.md))
 - **Colorblind-safe visualizations** throughout
 - **High-resolution outputs** (600 DPI publication-ready figures)
 
@@ -29,7 +45,8 @@ AutoMorphoTrack processes time-lapse `.tif` stacks (typically two-channel: mitoc
 
 ### Via PyPI (Recommended)
 ```bash
-pip install automorphotrack
+pip install automorphotrack            # core install
+pip install "automorphotrack[mcp]"     # + the Claude Code MCP connector
 ```
 
 ### From Source
@@ -43,12 +60,45 @@ pip install -e .
 ```bash
 git clone https://github.com/abayatibrain/AutoMorphoTrack.git
 cd AutoMorphoTrack
-pip install -e ".[dev]"
+pip install -e ".[dev,mcp]"
+pytest -q tests/
 ```
 
 ---
 
 ## Quick Start
+
+### One-command CLI (v2.2.0+)
+
+```bash
+# Whole pipeline, one TIF in, one folder out
+automorphotrack run path/to/Composite.tif --out ./results
+amt run path/to/Composite.tif --out ./results          # short alias
+
+# Just validate the segmentation against ground truth or synthetic GT
+automorphotrack validate path/to/Composite.tif --channel 0
+
+# Sensitivity sweep over thr_factor
+automorphotrack sweep path/to/Composite.tif --param thr_factor \
+    --values 0.4,0.6,0.8,1.0,1.2 --channel 0
+
+# Re-export AMT outputs in another tool's CSV schema
+automorphotrack benchmark results/Shape_Feature_Outputs/Mito_ShapeMetrics.csv \
+    --for cellprofiler --out cp_export.csv
+```
+
+### Use from Claude Code (MCP)
+
+```bash
+pip install "automorphotrack[mcp]"
+claude mcp add automorphotrack -- automorphotrack mcp
+```
+
+Then in Claude Code: *"Use automorphotrack to run the full pipeline on
+./stack.tif and summarize the motility distribution."* See
+[`docs/MCP.md`](docs/MCP.md) for the full tool list.
+
+### Python API
 
 ```python
 from automorphotrack import (
@@ -61,12 +111,13 @@ from automorphotrack import (
     track_overlay,
     analyze_motility,
     analyze_colocalization,
-    summarize_integrated_data
+    summarize_integrated_data,
+    segment_sauvola,         # pluggable adaptive segmentation backend
+    validate_segmentation,   # Dice / IoU / F1
+    sensitivity_analysis,    # real parameter sweep
 )
 
 tif_path = "path/to/Composite.tif"
-
-# Run full pipeline
 detect_organelles(tif_path)
 count_lysosomes_per_frame(tif_path)
 classify_morphology(tif_path)
@@ -74,7 +125,7 @@ analyze_shape_features(tif_path)
 profile_shape_data()
 track_organelles(tif_path)
 track_overlay(tif_path)
-analyze_motility()
+analyze_motility(min_detectable_displacement=0.5)   # suppress sub-pixel jitter
 analyze_colocalization(tif_path)
 summarize_integrated_data()
 ```
@@ -133,8 +184,9 @@ summarize_integrated_data()
 - scipy ≥ 1.9.0
 - tifffile ≥ 2022.8.12
 
-**Optional:**
-- scikit-learn (for validation metrics)
+**Optional extras:**
+- `automorphotrack[mcp]` adds `mcp >= 1.0.0` for the Claude Code MCP connector
+- `automorphotrack[dev]` adds `pytest`, `build`, `twine` for development
 
 ---
 
@@ -180,7 +232,14 @@ The integrated summary module uses **Spearman rank correlation** to compute rela
 
 ## AI Assistance Note
 
-This package was developed with support from AI language models (e.g., ChatGPT, Claude). The term "AI assistance" refers to using external LLMs to help generate, review, and refine analysis code—**NOT** a built-in AI interface or algorithmic component. All algorithms are explicit, interpretable, and scientifically grounded.
+AutoMorphoTrack **does** ship a real natural-language interface as of
+v2.2.0: the [Model Context Protocol](https://modelcontextprotocol.io)
+server (`automorphotrack mcp`) lets Claude Code, Claude Desktop, Cursor,
+and any other MCP-aware client call AMT analyses directly from prompts.
+See [`docs/MCP.md`](docs/MCP.md). All underlying algorithms remain
+explicit, deterministic, and interpretable — no LLM is involved in the
+image-analysis path itself; the MCP layer only routes natural-language
+requests to the existing Python API.
 
 ---
 
@@ -195,16 +254,22 @@ MIT License – See [LICENSE.md](LICENSE.md) for details.
 If you use this pipeline in your work, please cite:
 
 ```bibtex
-@article{bayati2025automorphotrack,
-  title={AutoMorphoTrack: Automated Organelle Tracking and Morphometric Profiling Toolkit},
-  author={Bayati, Armin and others},
-  year={2025}
+@article{bayati2026automorphotrack,
+  title={AutoMorphoTrack: A modular framework for quantitative analysis of organelle morphology, motility, and interactions at single-cell resolution},
+  author={Bayati, Armin and Schumacher, Jackson G. and Chen, Xiqun},
+  journal={eLife},
+  year={2026},
+  doi={10.7554/eLife.109936.1},
+  url={https://elifesciences.org/reviewed-preprints/109936}
 }
 ```
 
 Or in text:
 
-> **Bayati, A. et al.** AutoMorphoTrack: Automated Organelle Tracking and Morphometric Profiling Toolkit (2025)
+> **Bayati A, Schumacher JG, Chen X.** AutoMorphoTrack: A modular
+> framework for quantitative analysis of organelle morphology, motility,
+> and interactions at single-cell resolution. *eLife* 2026; reviewed
+> preprint RP109936. doi:10.7554/eLife.109936.1.
 
 ---
 

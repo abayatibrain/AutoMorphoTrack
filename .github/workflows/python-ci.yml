@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  install-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Verify pip install works (Reviewer #3 regression test)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Verify package imports
+        run: |
+          python -c "import automorphotrack as a; print(a.__version__); print(len(a.__all__), 'exports')"
+      - name: Verify CLI entry point
+        run: |
+          automorphotrack --help
+          amt --help
+      - name: Run unit tests
+        run: |
+          pytest -q tests/
+      - name: Build sdist and wheel
+        run: |
+          pip install build
+          python -m build

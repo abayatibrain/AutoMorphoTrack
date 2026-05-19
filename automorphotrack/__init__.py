@@ -33,7 +33,7 @@
 #     )
 # ============================================================
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 __author__ = "Armin Bayati"
 
 # --- Utility Imports ---
@@ -64,30 +64,45 @@ from automorphotrack.validation import (
     validate_segmentation,
     sensitivity_analysis,
     validate_tracking,
-    generate_validation_report
+    generate_validation_report,
+    generate_synthetic_ground_truth,
 )
+
+# --- Adaptive segmentation backends (R2.4) ---
+from automorphotrack.adaptive_segmentation import (
+    segment,
+    segment_otsu,
+    segment_sauvola,
+    segment_niblack,
+    segment_local_otsu,
+    segment_subtracted,
+    BACKENDS as SEGMENTATION_BACKENDS,
+)
+
+# --- Benchmarking against other tools (R1.2 / R2.3) ---
+from automorphotrack import benchmarking
+
+# --- Stats annotation helper (R2.5.iv) ---
+from automorphotrack.utils import annotate_stats
 
 # --- Convenience Alias (optional shortcut API) ---
 __all__ = [
-    "ensure_dir",
-    "save_high_dpi",
-    "upscale_frame",
-    "write_video",
-    "detect_organelles",
-    "count_lysosomes_per_frame",
-    "classify_morphology",
-    "analyze_shape_features",
-    "profile_shape_data",
-    "track_organelles",
-    "track_overlay",
-    "analyze_motility",
-    "analyze_colocalization",
-    "summarize_integrated_data",
-    "analyze_temporal_dynamics",
-    "analyze_spatial_statistics",
+    # utilities
+    "ensure_dir", "save_high_dpi", "upscale_frame", "write_video",
+    "annotate_stats",
+    # pipeline
+    "detect_organelles", "count_lysosomes_per_frame",
+    "classify_morphology", "analyze_shape_features", "profile_shape_data",
+    "track_organelles", "track_overlay", "analyze_motility",
+    "analyze_colocalization", "summarize_integrated_data",
+    "analyze_temporal_dynamics", "analyze_spatial_statistics",
     "analyze_network_topology",
-    "validate_segmentation",
-    "sensitivity_analysis",
-    "validate_tracking",
-    "generate_validation_report"
+    # validation
+    "validate_segmentation", "sensitivity_analysis", "validate_tracking",
+    "generate_validation_report", "generate_synthetic_ground_truth",
+    # adaptive segmentation backends
+    "segment", "segment_otsu", "segment_sauvola", "segment_niblack",
+    "segment_local_otsu", "segment_subtracted", "SEGMENTATION_BACKENDS",
+    # benchmarking
+    "benchmarking",
 ]

@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Test / CI artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Pipeline outputs (do not commit large image/video result trees by default)
+AMT_Outputs/
+Detection_Outputs/
+Shape_Feature_Outputs/
+Shape_Profiling_Outputs/
+Motility_Outputs/
+Colocalization_Outputs/
+Summary_Outputs/
+Tracking_Outputs/
+Tracking_Overlays/
+Validation_Outputs/
+LysoCount_Outputs/
+Morphology_Outputs/
