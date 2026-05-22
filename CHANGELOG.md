@@ -2,6 +2,29 @@
 
 All notable changes to AutoMorphoTrack are documented here.
 
+## [2.3.0] — 2026-05-19 — Napari GUI
+
+### Added
+
+- **Napari plugin** (`automorphotrack.napari_plugin`) — point-and-click
+  GUI registered automatically in napari's Plugins menu. Six dockable
+  widgets: Detect, Shape features, Tracking + motility, Colocalization,
+  Validation sweep, Run full pipeline. Install with
+  `pip install "automorphotrack[napari]"` and launch with
+  `automorphotrack gui` or via the napari Plugins menu.
+- **`napari.yaml` manifest** — declares the plugin contributions per the
+  npe2 schema; shipped via `package_data`.
+- **`automorphotrack gui` CLI sub-command** — opens napari with all AMT
+  widgets pre-docked into the main window.
+- **`docs/GUI.md`** — full GUI documentation.
+
+### Changed
+
+- Version bumped to 2.3.0.
+- `[napari]` extra registered in `setup.py` and `pyproject.toml`.
+
+---
+
 ## [2.2.0] — 2026-05-19 — Reviewer-driven revision
 
 This release addresses every public-review comment on eLife RP109936

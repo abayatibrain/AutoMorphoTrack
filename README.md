@@ -98,6 +98,17 @@ Then in Claude Code: *"Use automorphotrack to run the full pipeline on
 ./stack.tif and summarize the motility distribution."* See
 [`docs/MCP.md`](docs/MCP.md) for the full tool list.
 
+### Point-and-click GUI (napari plugin, v2.3.0+)
+
+```bash
+pip install "automorphotrack[napari]"
+automorphotrack gui                # launches napari with widgets pre-docked
+# or:  napari   →   Plugins → AutoMorphoTrack
+```
+
+Six widgets: Detect, Shape features, Tracking + motility, Colocalization,
+Validation sweep, Run full pipeline. See [`docs/GUI.md`](docs/GUI.md).
+
 ### Python API
 
 ```python

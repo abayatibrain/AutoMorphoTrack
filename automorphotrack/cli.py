@@ -85,6 +85,11 @@ def _add_mcp(sp):
     return p
 
 
+def _add_gui(sp):
+    p = sp.add_parser("gui", help="Launch the napari GUI for AutoMorphoTrack")
+    return p
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="automorphotrack",
@@ -96,6 +101,7 @@ def main(argv=None):
     _add_sweep(sp)
     _add_benchmark(sp)
     _add_mcp(sp)
+    _add_gui(sp)
 
     args = parser.parse_args(argv)
 
@@ -109,6 +115,8 @@ def main(argv=None):
         return _cmd_benchmark(args)
     if args.cmd == "mcp":
         return _cmd_mcp(args)
+    if args.cmd == "gui":
+        return _cmd_gui(args)
     parser.error(f"Unknown command {args.cmd}")
 
 
@@ -222,6 +230,20 @@ def _cmd_mcp(args):
         return 1
     serve()
     return 0
+
+
+def _cmd_gui(args):
+    try:
+        from automorphotrack.napari_plugin import launch_gui
+    except ImportError as e:
+        print(f"[AMT] GUI requires the optional 'napari' extra: "
+              f"pip install 'automorphotrack[napari]'\n  ({e})", file=sys.stderr)
+        return 1
+    try:
+        return launch_gui()
+    except ImportError as e:
+        print(f"[AMT] {e}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

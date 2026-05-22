@@ -10,7 +10,7 @@ if os.path.exists(readme_path):
 
 setup(
     name="automorphotrack",
-    version="2.2.0",
+    version="2.3.0",
     author="Armin Bayati, Ph.D.",
     author_email="a.bayati.brain@gmail.com",
     description="Automated pipeline for mitochondrial and lysosomal detection, tracking, morphology, and colocalization analysis in microscopy images.",
@@ -31,6 +31,12 @@ setup(
     ],
     extras_require={
         "mcp": ["mcp>=1.0.0"],  # Optional MCP server for Claude Code integration
+        "napari": [
+            "napari>=0.4.18",
+            "magicgui>=0.7.0",
+            "qtpy>=2.3.0",
+            "PyQt5>=5.15;platform_system!='Darwin' or platform_machine!='arm64'",
+        ],
         "dev": [
             "pytest>=7.0",
             "pytest-cov>=4.0",
@@ -43,6 +49,12 @@ setup(
             "automorphotrack=automorphotrack.cli:main",
             "amt=automorphotrack.cli:main",
         ],
+        "napari.manifest": [
+            "automorphotrack = automorphotrack:napari.yaml",
+        ],
+    },
+    package_data={
+        "automorphotrack": ["napari.yaml"],
     },
     classifiers=[
         "Programming Language :: Python :: 3",

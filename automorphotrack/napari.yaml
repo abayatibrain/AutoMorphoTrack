@@ -1,0 +1,35 @@
+name: automorphotrack
+display_name: AutoMorphoTrack
+contributions:
+  commands:
+    - id: automorphotrack.detect
+      title: AutoMorphoTrack — Detect organelles
+      python_name: automorphotrack.napari_plugin:make_detect_widget
+    - id: automorphotrack.shape
+      title: AutoMorphoTrack — Shape features
+      python_name: automorphotrack.napari_plugin:make_shape_widget
+    - id: automorphotrack.motility
+      title: AutoMorphoTrack — Tracking + motility
+      python_name: automorphotrack.napari_plugin:make_motility_widget
+    - id: automorphotrack.colocalization
+      title: AutoMorphoTrack — Colocalization
+      python_name: automorphotrack.napari_plugin:make_colocalization_widget
+    - id: automorphotrack.validation
+      title: AutoMorphoTrack — Validation sweep
+      python_name: automorphotrack.napari_plugin:make_validation_widget
+    - id: automorphotrack.full_pipeline
+      title: AutoMorphoTrack — Run full pipeline
+      python_name: automorphotrack.napari_plugin:make_full_pipeline_widget
+  widgets:
+    - command: automorphotrack.detect
+      display_name: Detect organelles
+    - command: automorphotrack.shape
+      display_name: Shape features
+    - command: automorphotrack.motility
+      display_name: Tracking + motility
+    - command: automorphotrack.colocalization
+      display_name: Colocalization
+    - command: automorphotrack.validation
+      display_name: Validation sweep
+    - command: automorphotrack.full_pipeline
+      display_name: Run full pipeline

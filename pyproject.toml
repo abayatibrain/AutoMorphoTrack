@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "automorphotrack"
-version = "2.2.0"
+version = "2.3.0"
 description = "Automated pipeline for mitochondrial and lysosomal detection, tracking, morphology, and colocalization analysis in microscopy images."
 readme = "README.md"
 license = {text = "MIT"}
@@ -38,11 +38,19 @@ dependencies = [
 
 [project.optional-dependencies]
 mcp = ["mcp>=1.0.0"]
+napari = [
+    "napari>=0.4.18",
+    "magicgui>=0.7.0",
+    "qtpy>=2.3.0",
+]
 dev = ["pytest>=7.0", "pytest-cov>=4.0", "build>=1.0", "twine>=4.0"]
 
 [project.scripts]
 automorphotrack = "automorphotrack.cli:main"
 amt = "automorphotrack.cli:main"
+
+[project.entry-points."napari.manifest"]
+automorphotrack = "automorphotrack:napari.yaml"
 
 [project.urls]
 Documentation = "https://github.com/abayatibrain/AutoMorphoTrack"
@@ -52,3 +60,6 @@ Tracker = "https://github.com/abayatibrain/AutoMorphoTrack/issues"
 [tool.setuptools.packages.find]
 include = ["automorphotrack*"]
 exclude = ["build*", "dist*", "tests*", "examples*", "Jupyter*"]
+
+[tool.setuptools.package-data]
+automorphotrack = ["napari.yaml"]
