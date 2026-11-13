@@ -1,0 +1,2 @@
+Sample_ID,Track_ID,Observations,Accepted_Steps,Ambiguous_Steps,Path_Length,Net_Displacement,Accepted_Duration,Mean_Speed,Complete_Accepted_Trajectory,Length_Unit,Speed_Unit
+known_motion,0,4,3,0,3.0,3.0,3.0,1.0,True,px,px/frame

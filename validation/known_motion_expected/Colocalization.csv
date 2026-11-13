@@ -1,0 +1,5 @@
+Sample_ID,Frame,Jaccard_Overlap,Thresholded_Manders_M1,Thresholded_Manders_M2,Intensity_Pearson_r,Intensity_Cosine_Overlap,ROI_Pixels,Overlap_Pixels,Mito_Positive_Pixels,Lyso_Positive_Pixels
+known_motion,0,0.0,0.0,0.0,-0.03159252095422308,0.0,1600,0,45,45
+known_motion,1,0.0,0.0,0.0,-0.03159252095422308,0.0,1600,0,45,45
+known_motion,2,0.0,0.0,0.0,-0.03159252095422308,0.0,1600,0,45,45
+known_motion,3,0.0,0.0,0.0,-0.03159252095422308,0.0,1600,0,45,45

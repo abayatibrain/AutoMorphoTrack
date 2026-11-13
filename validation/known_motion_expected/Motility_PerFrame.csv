@@ -1,0 +1,9 @@
+Sample_ID,Frame,Mean_Speed,Accepted_Steps,Organelle_Type
+known_motion,0,,0,Mito
+known_motion,1,1.0,1,Mito
+known_motion,2,1.0,1,Mito
+known_motion,3,1.0,1,Mito
+known_motion,0,,0,Lyso
+known_motion,1,1.0,1,Lyso
+known_motion,2,1.0,1,Lyso
+known_motion,3,1.0,1,Lyso

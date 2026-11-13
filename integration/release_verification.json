@@ -1,0 +1,173 @@
+{
+  "status": "passed",
+  "comparison": {
+    "passed": true,
+    "atol": 1e-12,
+    "rtol": 0,
+    "files_compared": 19,
+    "maximum_absolute_numeric_difference": 0.0,
+    "files": [
+      {
+        "file": "Colocalization.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Frame_Correlation_N.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 19,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Frame_Descriptive_Spearman.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 19,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Frame_Summary.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Lyso_InstanceLabels.tif",
+        "mode": "exact array",
+        "shape": [
+          4,
+          40,
+          40
+        ]
+      },
+      {
+        "file": "Lyso_Masks.tif",
+        "mode": "exact array",
+        "shape": [
+          4,
+          40,
+          40
+        ]
+      },
+      {
+        "file": "Lyso_MotilitySteps.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Lyso_MotilitySummary.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 1,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Lyso_ShapeMetrics.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Lyso_Tracks.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Mito_InstanceLabels.tif",
+        "mode": "exact array",
+        "shape": [
+          4,
+          40,
+          40
+        ]
+      },
+      {
+        "file": "Mito_Masks.tif",
+        "mode": "exact array",
+        "shape": [
+          4,
+          40,
+          40
+        ]
+      },
+      {
+        "file": "Mito_MotilitySteps.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Mito_MotilitySummary.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 1,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Mito_ShapeMetrics.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Mito_Tracks.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 4,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Motility_PerFrame.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 8,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Sample_Summary.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 1,
+        "maximum_absolute_numeric_difference": 0.0
+      },
+      {
+        "file": "Thresholds.csv",
+        "mode": "exact schema/text/integers; bounded floats",
+        "rows": 8,
+        "maximum_absolute_numeric_difference": 0.0
+      }
+    ]
+  },
+  "copied_rejection_controls": [
+    "installed_module_sha256_mismatch",
+    "package_file_inventory_changed",
+    "wheel_sha256_mismatch"
+  ],
+  "installed_modules_unchanged_after_controls": true,
+  "adapter_sha256": "902b4832e27c6a204aaf755ddaf741ac983e6a3b6ec2f81bb7f2e21f0c679145",
+  "wheel_sha256": "732cf7c0b503c328a19625c6ade95bebcddc7a1f5b60f5b1e512e52d551358ea",
+  "guard_sha256": "849a34d01b15b97750dd0f9555b773a772603a92c325699545d386101e9dce51",
+  "wrapper_identity": {
+    "files": {
+      "amt_guard.py": "849a34d01b15b97750dd0f9555b773a772603a92c325699545d386101e9dce51",
+      "client.py": "80f7762509ce7e4ec94679c2a280d272aa4fb10a13f57031d777190b810fea2b",
+      "run_guarded.py": "505f5a6c5d8b171bbd3fde24a306626af6d9fcf54e745a1177198451b87a3547"
+    },
+    "sha256": "fecc589982db0bc850cdd04afde243a876873cfae4de8e8e03853d140fdb5ef6"
+  },
+  "scope": "Execution equivalence and integrity checks; no new biological accuracy claim",
+  "installed_fixture": {
+    "status": "passed",
+    "distribution_version": "2.4.0",
+    "core_version": "1.1.0rc2",
+    "source_sha256": "8a4125a5ebe2b49e019f79b783503f31403a24ea3134d2d10b1bd4610ac3bce8",
+    "module_count": 18,
+    "output_files_compared": 19,
+    "expected_speed_px_per_frame": 1,
+    "numeric_atol": 1e-12,
+    "numeric_rtol": 0
+  },
+  "software_tests": {
+    "passed": 51,
+    "warnings": 10,
+    "environment": "macOS arm64 CPython 3.12.14",
+    "route": "Installed final wheel, isolated Python, pytest importlib mode"
+  }
+}

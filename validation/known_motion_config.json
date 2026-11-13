@@ -1,0 +1,40 @@
+{
+  "axes": "TCYX",
+  "mito_channel": 0,
+  "lyso_channel": 1,
+  "pixel_size_um": null,
+  "frame_interval_s": null,
+  "calibration_source": null,
+  "axes_override_reason": null,
+  "sample_id": "known_motion",
+  "biological_replicate_id": null,
+  "mito_segmentation": {
+    "threshold_factor": 0.8,
+    "min_size_px": 3,
+    "opening_radius_px": 1,
+    "clear_border": true,
+    "method": "otsu",
+    "local_block_size_px": 31,
+    "local_offset": 0.0,
+    "background_radius_px": 0
+  },
+  "lyso_segmentation": {
+    "threshold_factor": 0.8,
+    "min_size_px": 3,
+    "opening_radius_px": 1,
+    "clear_border": true,
+    "method": "otsu",
+    "local_block_size_px": 31,
+    "local_offset": 0.0,
+    "background_radius_px": 0
+  },
+  "max_link_distance_px": 3,
+  "exclude_ambiguous_links": true,
+  "elongated_eccentricity": 0.8,
+  "punctate_eccentricity": 0.6,
+  "min_elongated_area_um2": null,
+  "min_punctate_area_um2": null,
+  "background_percentile": null,
+  "render": false,
+  "audit_drift": false
+}

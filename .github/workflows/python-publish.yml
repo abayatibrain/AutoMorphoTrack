@@ -1,49 +1,50 @@
-# Publish AutoMorphoTrack to PyPI on GitHub Release
-# Uses trusted publishing (no API tokens) — configure once at
-# https://pypi.org/manage/account/publishing/ for project `automorphotrack`.
-
 name: Upload Python Package
-
 on:
   release:
     types: [published]
-
 permissions:
   contents: read
-
 jobs:
-  release-build:
+  verify-distributions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
-      - name: Build sdist and wheel
+          python-version: '3.12'
+      - name: Verify release identity
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
-          python -m pip install --upgrade pip build
-          python -m build
-      - name: Upload distributions
-        uses: actions/upload-artifact@v4
+          test "$RELEASE_TAG" = v2.4.0
+          cd release_artifacts/2.4.0
+          sha256sum --check SHA256SUMS
+      - name: Install and check the retained wheel
+        run: |
+          python -m pip install release_artifacts/2.4.0/*.whl pytest twine
+          python -m twine check release_artifacts/2.4.0/*.whl release_artifacts/2.4.0/*.tar.gz
+          python -m pytest -q tests
+          python -I validation/check_installed_core.py
+          amt-validated --help
+      - uses: actions/upload-artifact@v4
         with:
           name: release-dists
-          path: dist/
-
+          path: |
+            release_artifacts/2.4.0/*.whl
+            release_artifacts/2.4.0/*.tar.gz
   pypi-publish:
     runs-on: ubuntu-latest
-    needs: [release-build]
+    needs: [verify-distributions]
     permissions:
       id-token: write
     environment:
       name: pypi
       url: https://pypi.org/p/automorphotrack
     steps:
-      - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: release-dists
           path: dist/
-      - name: Publish release distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/

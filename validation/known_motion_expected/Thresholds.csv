@@ -1,0 +1,9 @@
+Sample_ID,Frame,Organelle_Type,Threshold
+known_motion,0,Mito,1.5625
+known_motion,1,Mito,1.5625
+known_motion,2,Mito,1.5625
+known_motion,3,Mito,1.5625
+known_motion,0,Lyso,1.25
+known_motion,1,Lyso,1.25
+known_motion,2,Lyso,1.25
+known_motion,3,Lyso,1.25

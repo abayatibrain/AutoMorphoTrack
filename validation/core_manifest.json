@@ -1,0 +1,28 @@
+{
+  "package_version": "2.4.0",
+  "namespace": "automorphotrack.validated",
+  "core_version": "1.1.0rc2",
+  "source_sha256": "8a4125a5ebe2b49e019f79b783503f31403a24ea3134d2d10b1bd4610ac3bce8",
+  "files": {
+    "__init__.py": "5b34457ed3b21e9e173fd8de355b262601ecc13ed149700591622872b59d8fd2",
+    "__main__.py": "867cea124cafa484a09e1df7a9370e8b5b2deb1d67a3b7279e0ac3d62d489163",
+    "colocalization.py": "6130941741f0963b0711eb5053b80500218d22f97f2ca062593d02f994d315ea",
+    "config.py": "cad5162fd37dbfa1885f9d17927b8a9d108cb9025f94873d1bd447275a728d33",
+    "core.py": "6f5a6c44a2e76bbc321ecd7a3b3fa70195a40580f581abbb5014c45dfb340ec1",
+    "detection.py": "d6e36aad109f5fa655eb945235840a6dc57b34c2fc6ba93ad9e69597502352b6",
+    "io.py": "e0b3bf635b2cff8df9eb620bbaea7320edf0e779e4218ec5c44c09bef6b092d3",
+    "lyso_count.py": "bfa4dacf6b2eaac26a070a79231e761c8cf78283ea42cff729bff69de495c466",
+    "morphology.py": "55bda5356b2277019ac150fcf13027788beb47500757c565d07ca1ee649359e7",
+    "motility.py": "41639f847a1f4d58eca97fa3c44521453688def1ea988da60750a12fe9b3616c",
+    "pipeline.py": "d721bbe24f2fabcc4c6c673706304d67bf502609b8c7e5a750652491dc839004",
+    "plotting.py": "4754dc559048f1cc2c53ab805d878fdfa75a358089ba6e8b640eefe1f6ed4fdf",
+    "shape_features.py": "087c624d8b9fc159ca60191ca2a30ee74bb934e46800f9981c77dc443987b7fa",
+    "shape_profiling.py": "aa2e444d96bc9eff991e801c123d0dfe06546e1ed3d3b0fe776d060d729028cb",
+    "summary.py": "32f365d886193efe71f669b19f13b1ffbad2008e8ff8618c1ee8e3400f4dfb4b",
+    "tracking.py": "d9267a9a183e0fce63e6816e621a9763c7b470b48749cbff51504b26ff6ebd17",
+    "tracking_overlay.py": "85c979d47c9887c5de785913e15530c783083cf4303df3cc1fea8b7999793ebd",
+    "utils.py": "b2229dbf18d1c65964a771fafb7c94857536d542c2bd9e3c36f049fb73d5cecd"
+  },
+  "upstream_revision": "0773ee1",
+  "existing_api": "Retained from the existing 2.3.0 repository. The manuscript benchmark applies to the validated namespace only."
+}

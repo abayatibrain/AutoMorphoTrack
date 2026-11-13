@@ -1,0 +1,5 @@
+Sample_ID,Frame,Track_ID,Label,X,Y,Link_Status,Link_Distance_px,Previous_Candidate_Count,Current_Candidate_Count,Delta_Frame,DX_px,DY_px,Step_Distance,Step_Duration,Accepted_Step,Speed
+known_motion,0,0,1,26.0,26.0,start,,0,0,,,,,,False,
+known_motion,1,0,1,25.0,26.0,matched,1.0,1,1,1.0,-1.0,0.0,1.0,1.0,True,1.0
+known_motion,2,0,1,24.0,26.0,matched,1.0,1,1,1.0,-1.0,0.0,1.0,1.0,True,1.0
+known_motion,3,0,1,23.0,26.0,matched,1.0,1,1,1.0,-1.0,0.0,1.0,1.0,True,1.0

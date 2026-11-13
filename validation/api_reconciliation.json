@@ -1,0 +1,28 @@
+{
+  "upstream_commit": "0773ee1",
+  "package_version": "2.4.0",
+  "change_type": "Additive validated namespace; existing module bytes retained except distribution version metadata",
+  "unchanged_existing_modules": [
+    "adaptive_segmentation.py",
+    "colocalization.py",
+    "motility.py",
+    "detection.py",
+    "lyso_count.py",
+    "napari_plugin.py",
+    "spatial_statistics.py",
+    "morphology.py",
+    "network_analysis.py",
+    "summary.py",
+    "cli.py",
+    "utils.py",
+    "temporal_dynamics.py",
+    "shape_profiling.py",
+    "tracking_overlay.py",
+    "shape_features.py",
+    "tracking.py",
+    "mcp_server.py",
+    "benchmarking.py",
+    "validation.py"
+  ],
+  "core_source_sha256": "8a4125a5ebe2b49e019f79b783503f31403a24ea3134d2d10b1bd4610ac3bce8"
+}
