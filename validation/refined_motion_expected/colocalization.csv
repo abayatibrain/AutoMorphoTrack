@@ -1,0 +1,6 @@
+Frame,Jaccard_Overlap,Thresholded_Manders_M1,Thresholded_Manders_M2,Intensity_Pearson_r,Intensity_Cosine_Overlap,ROI_Pixels,Overlap_Pixels,Mito_Positive_Pixels,Lyso_Positive_Pixels
+0,1.0,1.0,1.0,0.9999999999999999,1.0,4096,42,42,42
+1,1.0,1.0,1.0,0.9999999999999999,1.0,4096,42,42,42
+2,1.0,1.0,1.0,0.9999999999999999,1.0,4096,42,42,42
+3,1.0,1.0,1.0,0.9999999999999999,1.0,4096,42,42,42
+4,1.0,1.0,1.0,0.9999999999999999,1.0,4096,42,42,42

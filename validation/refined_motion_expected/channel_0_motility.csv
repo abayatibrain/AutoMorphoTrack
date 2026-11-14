@@ -1,0 +1,3 @@
+Track_ID,Observations,Accepted_Steps,Ambiguous_Steps,Path_Length,Net_Displacement,Accepted_Duration,Mean_Speed,Complete_Accepted_Trajectory,Length_Unit,Speed_Unit
+0,5,4,0,1.999999857820432,1.9999998578204294,8.0,0.249999982227554,True,um,um/s
+1,5,4,0,5.447849438441425e-07,5.446523976802568e-07,8.0,6.809811798051782e-08,True,um,um/s
