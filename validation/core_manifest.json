@@ -24,5 +24,5 @@
     "utils.py": "b2229dbf18d1c65964a771fafb7c94857536d542c2bd9e3c36f049fb73d5cecd"
   },
   "upstream_revision": "0773ee1",
-  "existing_api": "Retained from the existing 2.3.0 repository. The manuscript benchmark applies to the validated namespace only."
+  "existing_api": "Earlier 2.x interfaces retained. The manuscript evaluates automorphotrack.validated and the separately frozen automorphotrack.refined namespace."
 }
