@@ -1,6 +1,8 @@
 include README.md
 include LICENSE.md
 include pyproject.toml
+include CITATION.cff
+recursive-include examples *.py *.ipynb
 recursive-include automorphotrack *.py
 
 recursive-include validation *.json *.py *.tif *.csv

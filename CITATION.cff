@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Cite this release for the particle revision and reproduction materials."
+type: software
+title: "AutoMorphoTrack 2.5.0: particle refinement and manuscript revision"
+authors:
+  - family-names: Bayati
+    given-names: Armin
+version: 2.5.0
+date-released: 2026-11-14
+repository-code: "https://github.com/abayatibrain/AutoMorphoTrack"
+url: "https://github.com/abayatibrain/AutoMorphoTrack/releases/tag/v2.5.0"
+license: MIT
