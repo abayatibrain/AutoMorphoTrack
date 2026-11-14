@@ -1,24 +1,55 @@
 name: CI
 on:
   push:
-    branches: [main, elife-revision-2.4]
+    branches: [main, codex/particle-revision]
   pull_request:
+  workflow_dispatch:
 jobs:
   install-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ['3.11', '3.12']
+        artifact: [wheel, source]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Linux OpenCV runtime libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libxcb1 libgl1 libglib2.0-0
       - run: python -m pip install --upgrade pip build
       - run: python -m build
-      - run: python -m pip install dist/*.whl pytest
-      - run: python -m pytest -q tests
-      - run: amt-validated --help
-      - run: python -I validation/check_installed_core.py
+      - name: Install artifact and test dependencies
+        shell: python
+        env:
+          ARTIFACT_KIND: ${{ matrix.artifact }}
+        run: |
+          import glob, hashlib, json, os, pathlib, subprocess, sys
+          pattern = 'dist/*.whl' if os.environ['ARTIFACT_KIND'] == 'wheel' else 'dist/*.tar.gz'
+          files = glob.glob(pattern)
+          assert len(files) == 1, files
+          artifact = pathlib.Path(files[0])
+          pathlib.Path('validation_evidence').mkdir()
+          pathlib.Path('validation_evidence/artifact.json').write_text(json.dumps({'path': str(artifact), 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest()}, indent=2))
+          subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--only-binary=numpy,scipy,pandas,scikit-image', str(artifact), 'pytest'])
+      - name: Test the installed distribution
+        shell: python
+        run: |
+          import pathlib, shutil, subprocess, sys, tempfile
+          root = pathlib.Path.cwd()
+          with tempfile.TemporaryDirectory() as temp:
+              test_dir = pathlib.Path(temp) / 'tests'
+              shutil.copytree(root / 'tests', test_dir)
+              subprocess.check_call([sys.executable, '-I', '-m', 'pytest', '-q', str(test_dir), '--junitxml=' + str(root / 'validation_evidence/pytest.xml')], cwd=temp)
+              subprocess.check_call([sys.executable, '-I', str(root / 'validation/platform_check.py'), '--validation-dir', str(root / 'validation'), '--output', str(root / 'validation_evidence')], cwd=temp)
+          with (root / 'validation_evidence/pip_freeze.txt').open('w') as output:
+              subprocess.check_call([sys.executable, '-m', 'pip', 'freeze'], stdout=output)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: validation-${{ matrix.os }}-python${{ matrix.python-version }}-${{ matrix.artifact }}
+          path: validation_evidence/
