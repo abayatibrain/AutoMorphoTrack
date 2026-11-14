@@ -25,7 +25,7 @@ jobs:
         run: |
           python -m pip install release_artifacts/2.5.0/*.whl pytest twine
           python -m twine check release_artifacts/2.5.0/*.whl release_artifacts/2.5.0/*.tar.gz
-          python -I -m pytest -q tests
+          python -I -m pytest --import-mode=importlib -q tests
           python -I validation/platform_check.py --validation-dir validation --output release_validation
           amt-validated --help
           amt-refined --help
