@@ -1,0 +1,14 @@
+# Preserve the recorded quantitative source bytes on every checkout platform.
+*.py text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.tif binary
+*.tiff binary
+*.png binary
+*.pdf binary
+*.whl binary
+*.gz binary
