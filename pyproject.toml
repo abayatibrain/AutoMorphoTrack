@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "automorphotrack"
-version = "2.4.0"
+version = "2.5.0"
 description = "Automated pipeline for mitochondrial and lysosomal detection, tracking, morphology, and colocalization analysis in microscopy images."
 readme = "README.md"
 license = {text = "MIT"}
@@ -45,6 +45,8 @@ napari = [
 dev = ["pytest>=7.0", "pytest-cov>=4.0", "build>=1.0", "twine>=4.0"]
 
 [project.scripts]
+automorphotrack-refined = "automorphotrack.refined.__main__:main"
+amt-refined = "automorphotrack.refined.__main__:main"
 automorphotrack-validated = "automorphotrack.validated.__main__:main"
 amt-validated = "automorphotrack.validated.__main__:main"
 automorphotrack = "automorphotrack.cli:main"

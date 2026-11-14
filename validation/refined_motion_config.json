@@ -1,0 +1,28 @@
+{
+  "axes": null,
+  "axes_override_reason": null,
+  "channels": [
+    0,
+    1
+  ],
+  "spot": {
+    "sigma_px": 1.5,
+    "background_sigma_px": 6.0,
+    "threshold_snr": 3.0,
+    "min_distance_px": 3,
+    "support_fraction": 0.2,
+    "max_radius_px": 4.5,
+    "min_area_px": 3
+  },
+  "tracking": {
+    "max_distance_px": 6.0,
+    "ambiguity_margin_px": 0.5,
+    "prediction_weight": 0.0,
+    "max_gap_frames": 0
+  },
+  "min_observations": 3,
+  "pixel_size_um": 0.5,
+  "frame_interval_s": 2,
+  "calibration_source": "Analyst-defined synthetic motion fixture",
+  "sample_id": "sample"
+}

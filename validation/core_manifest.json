@@ -1,5 +1,5 @@
 {
-  "package_version": "2.4.0",
+  "package_version": "2.5.0",
   "namespace": "automorphotrack.validated",
   "core_version": "1.1.0rc2",
   "source_sha256": "8a4125a5ebe2b49e019f79b783503f31403a24ea3134d2d10b1bd4610ac3bce8",
@@ -24,5 +24,5 @@
     "utils.py": "b2229dbf18d1c65964a771fafb7c94857536d542c2bd9e3c36f049fb73d5cecd"
   },
   "upstream_revision": "0773ee1",
-  "existing_api": "Retained from the existing 2.3.0 repository. The manuscript benchmark applies to the validated namespace only."
+  "existing_api": "Earlier 2.x interfaces retained. The manuscript evaluates automorphotrack.validated and the separately frozen automorphotrack.refined namespace."
 }
