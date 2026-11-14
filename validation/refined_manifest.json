@@ -1,0 +1,71 @@
+{
+  "created_utc": "2026-11-14T13:33:33.228801+00:00",
+  "configuration": {
+    "axes": null,
+    "axes_override_reason": null,
+    "channels": [
+      0
+    ],
+    "spot": {
+      "sigma_px": 1.5,
+      "background_sigma_px": 6.0,
+      "threshold_snr": 3.0,
+      "min_distance_px": 3,
+      "support_fraction": 0.2,
+      "max_radius_px": 4.5,
+      "min_area_px": 3
+    },
+    "tracking": {
+      "max_distance_px": 6.0,
+      "ambiguity_margin_px": 0.5,
+      "prediction_weight": 0.0,
+      "max_gap_frames": 0
+    },
+    "min_observations": 3,
+    "pixel_size_um": null,
+    "frame_interval_s": null,
+    "calibration_source": null,
+    "sample_id": "sample"
+  },
+  "source_sha256": {
+    "__init__.py": "381c371dc1625ebdb2ffb2b209b141af24c8db367ba3bdb352ea40369047ee2a",
+    "__main__.py": "720043b79ad53a94865962e091045b896c1eb9620ada2eb6b1342cb14db4827a",
+    "pipeline.py": "2a6c1098b7330cc03a10f59cd0177f0024a8f42e14cb421ce80d3704776c8e3a",
+    "segmentation.py": "7eee366297fffe591f9bc7e7c166154c46cd77c5d6db8c89989f9a238e6c1a02",
+    "tracking.py": "a25a4fb35aafb8265014e518217e0428bf0141f6fc971fb6684b74efdfcb0247"
+  },
+  "source_digest": "dcacbe6eede1cfef2cfa165418f8e0c9428aafebf3632a27a6a7655e3605f3a6",
+  "synthetic_seeds": [
+    6501,
+    6502,
+    6503,
+    6504,
+    6505
+  ],
+  "synthetic_snr": [
+    2,
+    4,
+    8
+  ],
+  "motion": [
+    "mixed",
+    "directed"
+  ],
+  "noise_seeds": [
+    6511,
+    6512,
+    6513,
+    6514,
+    6515
+  ],
+  "reserved_movies": [
+    "MSP04",
+    "MSP05",
+    "MSP06",
+    "MSP10",
+    "MSP11",
+    "MSP12"
+  ],
+  "frozen_before_reserved_evaluation": true,
+  "metrics_script_sha256": "88b261d72c401f9ad62dfb71fcbe882b3e8ec34fb40dc7dbf7d7d715fc630e54"
+}
